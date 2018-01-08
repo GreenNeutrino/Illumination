@@ -47,7 +47,7 @@ class ArticleSentiment():
         return self.sentiment_analysis(article)
 
 
-    def _sentiment_analysis_all_sentences(self, article):
+    def sentiment_analysis_all_sentences(self, article):
         '''
         sentiment analysis for all split sentences
         line at a time
