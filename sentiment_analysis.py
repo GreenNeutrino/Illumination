@@ -1,39 +1,85 @@
-from textblob import TextBlob
-import textblob
+import sys
 import newspaper
-import nltk
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
+class ArticleSentiment():
+    '''
+    Class capture categorize various sentiment metrics for 
+    articles
+    '''
+    def __init__(self, url):
+        self.article = self._parse_article_text(url)
+        self.title_sentiment = self.sentiment_analysis(self.article.title)
+        self.overall_sentiment = self._sentiment_analysis_total(self.article.text)
 
-def parse_article_text(url):
-    first_article = newspaper.Article(url, language='en')
-    first_article.download()
-    first_article.parse()
-    return first_article
 
-def sentiment_analaysis_sentence(sentence):
-    analyzer = SentimentIntensityAnalyzer()
-    results = analyzer.polarity_scores(sentence)
-    return results 
+    def sentiment_sentence_with_keyword(self, keyword):
+        '''
+        TODO
+        '''
+        pass
 
+
+    def _parse_article_text(self, url):
+        '''
+        Returns article object with parsed and downloaded text
+        '''
+        first_article = newspaper.Article(url, language='en')
+        first_article.download()
+        first_article.parse()
+        return first_article
+
+
+    def sentiment_analysis(self, text):
+        '''
+        returns sentiment analysis metric
+        with positive, negative, and compound
+        '''
+        analyzer = SentimentIntensityAnalyzer()
+        results = analyzer.polarity_scores(text)
+        return results 
+
+
+    def _sentiment_analysis_total(self, article):
+        '''
+        sentiment analysis for all text in article
+        '''
+        return self.sentiment_analysis(article)
+
+
+    def _sentiment_analysis_all_sentences(self, article):
+        '''
+        sentiment analysis for all split sentences
+        line at a time
+
+        output: {'sentence': sentiment_metrics}
+        '''
+
+        sentences = article.text.split('.')
+        data = {}
+
+        for sentence in sentences:
+            data[sentence] = sentiment_analysis(sentence)
+
+        return data
+
+'''
 def main():
-    #example_url = 'https://arstechnica.com/information-technology/2018/01/intel-ceos-sale-of-stock-just-before-security-bug-reveal-raises-questions/'
-    #example_url =  "https://www.denverpost.com/2018/01/06/amazon-maintains-holiday-dominance-despite-stepped-up-pressure/"
-    #example_url = 'http://www.latimes.com/local/california/la-me-ln-flu-surge-20180106-htmlstory.html'
-    example_url = 'https://www.theregister.co.uk/2018/01/04/intel_amd_arm_cpu_vulnerability/'
-
+    example_url = sys.argv[1]
     data = parse_article_text(example_url)
     sentences = data.text.split('.')
+
     for sentence in sentences:
         print( sentence)
-        print(sentiment_analaysis_sentence(sentence))
+        print(sentiment_analysis_sentence(sentence))
+
     print(data.title)
-    print (sentiment_analaysis_sentence(data.title), 'TITLE')
-    print(sentiment_analaysis_sentence(data.text), 'OVERALL')
+    print (sentiment_analysis_sentence(data.title), 'TITLE')
+    print(sentiment_analysis_sentence(data.text), 'OVERALL')
 
 
 if __name__ == "__main__":
     main()
     print ('finished')
-
+'''
 
